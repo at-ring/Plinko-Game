@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndrewRingAssignment3", "AndrewRingAssignment3\AndrewRingAssignment3\AndrewRingAssignment3.csproj", "{849849E1-C6DC-4ACC-8646-CEFCB8E194D5}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "AndrewRingAssignment3Content", "AndrewRingAssignment3\AndrewRingAssignment3Content\AndrewRingAssignment3Content.contentproj", "{D8DD044A-BDA0-47D3-ABE2-1DC65A8FADF2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{849849E1-C6DC-4ACC-8646-CEFCB8E194D5}.Debug|x86.ActiveCfg = Debug|x86
+		{849849E1-C6DC-4ACC-8646-CEFCB8E194D5}.Debug|x86.Build.0 = Debug|x86
+		{849849E1-C6DC-4ACC-8646-CEFCB8E194D5}.Release|x86.ActiveCfg = Release|x86
+		{849849E1-C6DC-4ACC-8646-CEFCB8E194D5}.Release|x86.Build.0 = Release|x86
+		{D8DD044A-BDA0-47D3-ABE2-1DC65A8FADF2}.Debug|x86.ActiveCfg = Debug|x86
+		{D8DD044A-BDA0-47D3-ABE2-1DC65A8FADF2}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
