@@ -19,11 +19,14 @@ namespace AndrewRingAssignment3
         private Vector2 cameraPosition;
         private PlayerSprite playerSprite;
         private Game inGame;
-        public ActorManager(Game game) : base(game) 
+        private SoundBank soundBank;
+
+        public ActorManager(Game game, SoundBank soundBank) : base(game) 
         {
             actorList = new List<Actor>();
             cameraPosition = Vector2.Zero;
             inGame = game;
+            this.soundBank = soundBank;
         }
 
         public override void Initialize()
@@ -38,9 +41,11 @@ namespace AndrewRingAssignment3
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
             // add the spites to the list for the manager to look though
-            playerSprite = new PlayerSprite(Game.Content.Load<Texture2D>(@"Images/PlayerCircle"),new Vector2(0,0), new Point(116,116), 0, new Point(1,1), new Point(1,1), 0, 0, Vector2.Zero, inGame);
-            actorList.Add(new PegSprite(Game.Content.Load<Texture2D>(@"Images/Peg"), new Vector2(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height /2), new Point(54, 54), 0, new Point(1, 1), new Point(1, 1), 0, 0, Vector2.Zero, inGame));
+            playerSprite = new PlayerSprite(Game.Content.Load<Texture2D>(@"Images/PlayerCircle"),new Vector2(0,0), new Point(116,116), 0, new Point(1,1), new Point(1,1), 0, 0, Vector2.Zero, inGame, soundBank);
+            actorList.Add(new PegSprite(Game.Content.Load<Texture2D>(@"Images/Peg"), new Vector2(Game.Window.ClientBounds.Width / 2, Game.Window.ClientBounds.Height /2), new Point(54, 54), 0, new Point(1, 1), new Point(1, 1), 0, 0, Vector2.Zero, inGame, soundBank));
             //actorList.Add(new GoalSprite());
+            Song song = Game.Content.Load<Song>(@"Music/Sleep Away");
+            MediaPlayer.Play(song);
             base.LoadContent();
         }
 

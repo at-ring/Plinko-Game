@@ -14,8 +14,8 @@ namespace AndrewRingAssignment3
 {
     class BackgroundSprite : Actor
     {
-        public BackgroundSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, int timeSincelastFrame, int millisecondsPerFrame, Vector2 speed, Game inGame)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, timeSincelastFrame, millisecondsPerFrame, speed, inGame)
+        public BackgroundSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, int timeSincelastFrame, int millisecondsPerFrame, Vector2 speed, Game inGame, SoundBank soundBank)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, timeSincelastFrame, millisecondsPerFrame, speed, inGame, soundBank)
         {
         }
     }

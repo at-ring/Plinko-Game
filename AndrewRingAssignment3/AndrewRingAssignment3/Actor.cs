@@ -26,6 +26,19 @@ namespace AndrewRingAssignment3
         private BoundingBox collisionRectangle;
         private BoundingSphere collisionSphere;
         protected Game inGame;
+        protected SoundBank soundBank;
+
+        public SoundBank thisSoundBank
+        {
+            get
+            {
+                return soundBank;
+            }
+            private set
+            {
+                soundBank = value;
+            }
+        }
 
         public Texture2D TextureImage 
         {
@@ -149,7 +162,7 @@ namespace AndrewRingAssignment3
             }
         }
     
-        public Actor(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, int timeSincelastFrame, int millisecondsPerFrame, Vector2 speed, Game inGame) 
+        public Actor(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, int timeSincelastFrame, int millisecondsPerFrame, Vector2 speed, Game inGame, SoundBank soundBank) 
         {
             this.textureImage = textureImage;
             this.position = position;
@@ -161,6 +174,7 @@ namespace AndrewRingAssignment3
             this.millisecondsPerFrame = millisecondsPerFrame;
             this.speed = speed;
             this.inGame = inGame;
+            this.soundBank = soundBank;
         }
         public void draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

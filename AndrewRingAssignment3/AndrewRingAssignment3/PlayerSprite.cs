@@ -29,8 +29,8 @@ namespace AndrewRingAssignment3
             }
         }
 
-        public PlayerSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, int timeSincelastFrame, int millisecondsPerFrame, Vector2 speed, Game inGame)
-            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, timeSincelastFrame, millisecondsPerFrame, speed, inGame)
+        public PlayerSprite(Texture2D textureImage, Vector2 position, Point frameSize, int collisionOffset, Point currentFrame, Point sheetSize, int timeSincelastFrame, int millisecondsPerFrame, Vector2 speed, Game inGame, SoundBank soundBank)
+            : base(textureImage, position, frameSize, collisionOffset, currentFrame, sheetSize, timeSincelastFrame, millisecondsPerFrame, speed, inGame, soundBank)
         {
             hasBeenReleased = false;
             // create the bounding sphere by taking half the framesize for x and y which gives the center and radius
@@ -40,112 +40,129 @@ namespace AndrewRingAssignment3
 
         public override void update(GameTime gametime, Actor actor)
         {
-            if (hasBeenReleased)
+            try
             {
-                // if actor is a peg sprite check to see if the bounded spheres intersect
-                if (actor is PegSprite)
+                if (hasBeenReleased)
                 {
-                    // player's collision sphere
-                    BoundingSphere collisionSphere = CollisionSphere;
-                    // actor's collision sphere
-                    BoundingSphere sphere = actor.CollisionSphere;
-                    if (Position.Y > inGame.Window.ClientBounds.Y)
+                    // if actor is a peg sprite check to see if the bounded spheres intersect
+                    if (actor is PegSprite)
                     {
-                        inGame.Exit();
-                    } 
-                    // does the object collide with this sphere?
-                    else if (sphere.Intersects(collisionSphere))
-                    {
-                        // if the center of the peg is to the right of the center of the ball
-                        if (sphere.Center.X > collisionSphere.Center.X)
+                        // player's collision sphere
+                        BoundingSphere collisionSphere = CollisionSphere;
+                        // actor's collision sphere
+                        BoundingSphere sphere = actor.CollisionSphere;
+                        if (Position.Y > inGame.Window.ClientBounds.Y)
                         {
-                            Speed = new Vector2(Speed.X - 0.1f, 0);
-                            Position = Position + Speed;
+                            inGame.Exit();
                         }
-                        // if the center of the peg is to the left of the center of the ball
-                        else if (sphere.Center.X < collisionSphere.Center.X)
+                        // does the object collide with this sphere?
+                        else if (sphere.Intersects(collisionSphere))
                         {
-                            Speed = new Vector2(Speed.X + 0.1f, 0);
-                            Position = Position + Speed;
-                        }
-                        // the center of the peg and the center of the ball have the same x coordinate
-                        else
-                        {
-                            // determine which way the ball should fall
-                            Random random = new Random();
-                            int randomNumber = random.Next(0, 1);
-                            if (randomNumber == 0)
+                            // if the center of the peg is to the right of the center of the ball
+                            if (sphere.Center.X > collisionSphere.Center.X)
                             {
                                 Speed = new Vector2(Speed.X - 0.1f, 0);
+                                Position = Position + Speed;
+                                thisSoundBank.PlayCue("hit");
+                            }
+                            // if the center of the peg is to the left of the center of the ball
+                            else if (sphere.Center.X < collisionSphere.Center.X)
+                            {
+                                Speed = new Vector2(Speed.X + 0.1f, 0);
+                                Position = Position + Speed;
+                                thisSoundBank.PlayCue("hit");
+                            }
+                            // the center of the peg and the center of the ball have the same x coordinate
+                            else
+                            {
+                                // determine which way the ball should fall
+                                Random random = new Random();
+                                int randomNumber = random.Next(0, 1);
+                                if (randomNumber == 0)
+                                {
+                                    Speed = new Vector2(Speed.X - 0.1f, 0);
+                                    Position = Position + Speed;
+                                    thisSoundBank.PlayCue("hit");
+                                }
+                                else
+                                {
+                                    Speed = new Vector2(Speed.X + 0.1f, 0);
+                                    Position = Position + Speed;
+                                    thisSoundBank.PlayCue("hit");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // move the ball downwards in the same direction
+                            if (Speed.X > 0)
+                            {
+                                // begin returning to the natural speed
+                                Speed = new Vector2(Speed.X - 0.1f, Math.Max(Speed.Y + 0.1f, naturalSpeed.Y));
+                                Position = Position + Speed;
+                            }
+                            else if (Speed.X < 0)
+                            {
+                                // begin returning to the natural speed
+                                Speed = new Vector2(Speed.X + 0.1f, Math.Max(Speed.Y + 0.1f, naturalSpeed.Y));
                                 Position = Position + Speed;
                             }
                             else
                             {
-                                Speed = new Vector2(Speed.X + 0.1f, 0);
                                 Position = Position + Speed;
                             }
                         }
                     }
-                    else
+                }
+                else
+                {
+                    // allows for the ball to move left or right without dropping until enter is pressed
+                    KeyboardState keyboardState = Keyboard.GetState();
+                    Vector2 currentPosition = Position;
+                    if (keyboardState.IsKeyDown(Keys.Left))
                     {
-                        // move the ball downwards in the same direction
-                        if (Speed.X > 0)
+                        if (currentPosition.X > 0)
                         {
-                            // begin returning to the natural speed
-                            Speed = new Vector2(Speed.X - 0.1f, Math.Max(Speed.Y + 0.1f, naturalSpeed.Y));
-                            Position = Position + Speed;
-                        }
-                        else if (Speed.X < 0)
-                        {
-                            // begin returning to the natural speed
-                            Speed = new Vector2(Speed.X + 0.1f, Math.Max(Speed.Y + 0.1f, naturalSpeed.Y));
+                            Position = new Vector2(currentPosition.X - 1.0f, currentPosition.Y);
                             Position = Position + Speed;
                         }
                         else
                         {
-                            Position = Position + Speed;
+                            Position = new Vector2(0, currentPosition.Y);
                         }
                     }
+                    else if (keyboardState.IsKeyDown(Keys.Right))
+                    {
+                        if (currentPosition.X < inGame.Window.ClientBounds.Width - FrameSize.X)
+                        {
+                            Position = new Vector2(Position.X + 1.0f, Position.Y);
+                            Position = Position + Speed;
+                        }
+                        else
+                        {
+                            Position = new Vector2(inGame.Window.ClientBounds.Width - FrameSize.X, currentPosition.Y);
+                        }
+                    }
+                    else if (keyboardState.IsKeyDown(Keys.R))
+                    {
+                        hasBeenReleased = true;
+                        thisSoundBank.PlayCue("release");
+                        // start moving the ball downwards
+                        Speed = naturalSpeed;
+                        Position = Position + Speed;
+                    }
                 }
+                KeyboardState state = Keyboard.GetState();
+                if (state.IsKeyDown(Keys.S))
+                {
+                    thisSoundBank.PlayCue("dual");
+                }
+                this.CollisionSphere = new BoundingSphere(new Vector3(Position.X + (FrameSize.X / 2), Position.Y + (FrameSize.Y / 2), 0), FrameSize.X / 2);
             }
-            else
+            catch (InvalidOperationException e)
             {
-                // allows for the ball to move left or right without dropping until enter is pressed
-                KeyboardState keyboardState = Keyboard.GetState();
-                Vector2 currentPosition = Position;
-                if (keyboardState.IsKeyDown(Keys.Left))
-                {
-                    if (currentPosition.X > 0)
-                    {
-                        Position = new Vector2(currentPosition.X - 1.0f, currentPosition.Y);
-                        Position = Position + Speed;
-                    }
-                    else
-                    {
-                        Position = new Vector2(0, currentPosition.Y);
-                    }
-                }
-                else if (keyboardState.IsKeyDown(Keys.Right))
-                {
-                    if (currentPosition.X < inGame.Window.ClientBounds.Width - FrameSize.X)
-                    {
-                        Position = new Vector2(Position.X + 1.0f, Position.Y);
-                        Position = Position + Speed;
-                    }
-                    else
-                    {
-                        Position = new Vector2(inGame.Window.ClientBounds.Width - FrameSize.X, currentPosition.Y);
-                    }
-                }
-                else if (keyboardState.IsKeyDown(Keys.R))
-                {
-                    hasBeenReleased = true;
-                    // start moving the ball downwards
-                    Speed = naturalSpeed;
-                    Position = Position + Speed;                    
-                }
+                Console.WriteLine(e.StackTrace);
             }
-            this.CollisionSphere = new BoundingSphere(new Vector3(Position.X + (FrameSize.X / 2), Position.Y + (FrameSize.Y / 2), 0), FrameSize.X / 2);
         }
     }
 }

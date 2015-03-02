@@ -18,11 +18,18 @@ namespace AndrewRingAssignment3
     {
         GraphicsDeviceManager graphics;
         ActorManager manager;
+        AudioEngine audioEngine;
+        WaveBank waveBank;
+        SoundBank soundBank;
+        //Cue trackCue;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            manager = new ActorManager(this);
+            audioEngine = new AudioEngine(@"Content/Audio/GameAudio.xgs");
+            waveBank = new WaveBank(audioEngine, @"Content/Audio/Wave Bank.xwb");
+            soundBank = new SoundBank(audioEngine, @"Content/Audio/Sound Bank.xsb");
+            manager = new ActorManager(this, soundBank);
             Content.RootDirectory = "Content";            
         }
 
@@ -45,9 +52,6 @@ namespace AndrewRingAssignment3
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            //spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
         }
 
